@@ -1,0 +1,12 @@
+# (ESP-IDF 5.x) Keep defaults minimal; avoid deprecated/removed symbols.
+CONFIG_LWIP_IPV6=y
+CONFIG_PARTITION_TABLE_CUSTOM=y
+CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions.csv"
+CONFIG_PARTITION_TABLE_FILENAME="partitions.csv"
+
+# XIAO ESP32S3 has 8MB flash.
+CONFIG_ESPTOOLPY_FLASHSIZE_8MB=y
+CONFIG_ESPTOOLPY_FLASHSIZE="8MB"
+
+# Camera: allow using PSRAM as DMA-capable frame buffer (needed for QVGA RGB565 on S3).
+CONFIG_CAMERA_PSRAM_DMA=y

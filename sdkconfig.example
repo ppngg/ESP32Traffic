@@ -1,0 +1,21 @@
+# Example SDK Configuration
+# Copy this file to sdkconfig and update with your values
+# Or use: idf.py menuconfig
+
+# MQTT Configuration
+# Replace with your AWS IoT endpoint (found in AWS IoT Console > Settings)
+CONFIG_MQTT_BROKER_ENDPOINT="your-endpoint-here.iot.region.amazonaws.com"
+CONFIG_MQTT_BROKER_PORT=8883
+
+# MQTT Client Identifier (must be unique per device)
+CONFIG_MQTT_CLIENT_IDENTIFIER="your-device-id"
+
+# Other important settings (from sdkconfig.defaults)
+CONFIG_LWIP_IPV6=y
+CONFIG_PARTITION_TABLE_CUSTOM=y
+CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions.csv"
+CONFIG_PARTITION_TABLE_FILENAME="partitions.csv"
+CONFIG_ESPTOOLPY_FLASHSIZE_8MB=y
+CONFIG_ESPTOOLPY_FLASHSIZE="8MB"
+CONFIG_CAMERA_PSRAM_DMA=y
+

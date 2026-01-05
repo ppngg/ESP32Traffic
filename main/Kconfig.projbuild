@@ -1,0 +1,249 @@
+menu "Example Configuration"
+
+    config MQTT_CLIENT_IDENTIFIER
+        string "The MQTT client identifier used in this example"
+        default "testClient"
+        help
+            The MQTT client identifier used in this example. Each client identifier must be unique.
+            so edit as required to ensure that no two clients connecting to the same broker use the same client identifier.
+
+    config MQTT_BROKER_ENDPOINT
+        string "Endpoint of the MQTT broker to connect to"
+        default "test.mosquitto.org"
+        help
+            This example can be run with any MQTT broker, that supports server authentication.
+
+    config MQTT_BROKER_PORT
+        int "Port of the MQTT broker use"
+        default 8883
+        help
+            In general, port 8883 is for secured MQTT connections.
+            Port 443 requires use of the ALPN TLS extension with the ALPN protocol name.
+            When using port 8883, ALPN is not required.
+
+    config MQTT_USE_CERT_BUNDLE
+        bool "Use ESP-IDF certificate bundle for server verification"
+        default y
+        help
+            If enabled, the ESP-IDF certificate bundle is used to verify the broker's
+            server certificate. This works well with public brokers like
+            test.mosquitto.org (Let's Encrypt) and also includes Amazon root CAs.
+            If disabled, the project will verify using the embedded root certificate
+            file main/certs/root_cert_auth.crt.
+
+    config HARDWARE_PLATFORM_NAME
+        string "The hardware platform"
+        default "ESP32"
+        help
+            The name of the hardware platform the application is running on.
+
+    config MQTT_NETWORK_BUFFER_SIZE
+        int "Size of the network buffer for MQTT packets"
+        range 1024 2048
+        default 1024
+        help
+            Size of the network buffer for MQTT packets.
+
+    choice EXAMPLE_CHOOSE_PKI_ACCESS_METHOD
+        prompt "Choose PKI credentials access method"
+        default EXAMPLE_USE_PLAIN_FLASH_STORAGE
+        help
+            ESP devices support multiple ways to secure store the PKI credentials.
+            Currently Secure Element (ATECC608A) and DS peripheral
+            (using ESP Secure Cert Manager) are supported.
+            The default behaviour is to access the PKI credentials which are embedded in the binary.
+            Consult the ESP-TLS documentation in ESP-IDF Programming guide for more details.
+
+        config EXAMPLE_USE_SECURE_ELEMENT
+        bool "Use secure element (ATECC608A)"
+        depends on (IDF_TARGET_ESP32 || IDF_TARGET_ESP32C2) && ESP_TLS_USING_MBEDTLS
+        select ESP_TLS_USE_SECURE_ELEMENT
+        help
+            Enable the use of secure element for the example.
+            The esp-cryptoauthlib component is required for enabling
+            this option.
+
+        config EXAMPLE_USE_ESP_SECURE_CERT_MGR
+        bool "Use ESP Secure Certificate Manager"
+        help
+            Enable the use of ESP Secure Certificate Manager APIs for the example.
+            Please refer to ESP Secure Certificate Manager documentation for more details.
+
+        config EXAMPLE_USE_PLAIN_FLASH_STORAGE
+        bool "Use flash storage (default)"
+        help
+            This option expects the Private key and Device certificate to be embedded in the binary.
+            This is the default behaviour.
+    endchoice
+
+    menu "Motorbike detection (SWIFT-YOLO + OV2640)"
+
+        config MBDET_ENABLE
+            bool "Enable motorbike detector + density_now publish"
+            default y
+
+        config MBDET_SCORE_THR_PCT
+            int "Detection score threshold (percent)"
+            range 0 100
+            default 65
+
+        config MBDET_TOPK
+            int "TopK detections used for density metric"
+            range 1 50
+            default 10
+
+        config MBDET_BURST_N
+            int "Burst frames per update"
+            range 1 10
+            default 3
+
+        config MBDET_INTERVAL_MIN_S
+            int "Min seconds between updates"
+            range 5 3600
+            default 15
+
+        config MBDET_INTERVAL_MAX_S
+            int "Max seconds between updates"
+            range 5 3600
+            default 15
+
+        config MBDET_ROI_X1_PCT
+            int "ROI x1 (percent of frame width)"
+            range 0 100
+            default 5
+
+        config MBDET_ROI_X2_PCT
+            int "ROI x2 (percent of frame width)"
+            range 0 100
+            default 95
+
+        config MBDET_ROI_Y1_PCT
+            int "ROI y1 (percent of frame height)"
+            range 0 100
+            default 45
+
+        config MBDET_ROI_Y2_PCT
+            int "ROI y2 (percent of frame height)"
+            range 0 100
+            default 95
+
+        choice MBDET_INPUT_NORM_MODE
+            prompt "Model input normalization"
+            default MBDET_INPUT_NORM_AUTO
+            help
+                AUTO picks 0..1 vs 0..255 based on the input tensor quantization scale.
+
+            config MBDET_INPUT_NORM_AUTO
+                bool "Auto (recommended)"
+
+            config MBDET_INPUT_NORM_0_1
+                bool "Normalize to 0..1 before quantizing"
+
+            config MBDET_INPUT_NORM_0_255
+                bool "Use raw 0..255 before quantizing"
+        endchoice
+
+        config MBDET_TENSOR_ARENA_BYTES
+            int "Tensor arena bytes (PSRAM preferred)"
+            range 200000 6000000
+            default 3000000
+
+        choice MBDET_CAMERA_PRESET
+            prompt "Camera pin preset"
+            default MBDET_CAM_PRESET_XIAO_ESP32S3
+            help
+                Pick a known wiring preset. If yours differs, select Custom and fill in pins.
+
+            config MBDET_CAM_PRESET_ESP32S3_EYE
+                bool "ESP32-S3-EYE (OV2640)"
+
+            config MBDET_CAM_PRESET_XIAO_ESP32S3
+                bool "XIAO ESP32S3 Sense (OV2640)"
+
+            config MBDET_CAM_PRESET_CUSTOM
+                bool "Custom pins"
+        endchoice
+
+        config MBDET_CAM_PIN_PWDN
+            int "PWDN GPIO"
+            default -1
+            depends on MBDET_CAM_PRESET_CUSTOM
+
+        config MBDET_CAM_PIN_RESET
+            int "RESET GPIO"
+            default -1
+            depends on MBDET_CAM_PRESET_CUSTOM
+
+        config MBDET_CAM_PIN_XCLK
+            int "XCLK GPIO"
+            default 15
+            depends on MBDET_CAM_PRESET_CUSTOM
+
+        config MBDET_CAM_PIN_SIOD
+            int "SIOD GPIO"
+            default 4
+            depends on MBDET_CAM_PRESET_CUSTOM
+
+        config MBDET_CAM_PIN_SIOC
+            int "SIOC GPIO"
+            default 5
+            depends on MBDET_CAM_PRESET_CUSTOM
+
+        config MBDET_CAM_PIN_Y9
+            int "Y9 GPIO"
+            default 16
+            depends on MBDET_CAM_PRESET_CUSTOM
+
+        config MBDET_CAM_PIN_Y8
+            int "Y8 GPIO"
+            default 17
+            depends on MBDET_CAM_PRESET_CUSTOM
+
+        config MBDET_CAM_PIN_Y7
+            int "Y7 GPIO"
+            default 18
+            depends on MBDET_CAM_PRESET_CUSTOM
+
+        config MBDET_CAM_PIN_Y6
+            int "Y6 GPIO"
+            default 12
+            depends on MBDET_CAM_PRESET_CUSTOM
+
+        config MBDET_CAM_PIN_Y5
+            int "Y5 GPIO"
+            default 10
+            depends on MBDET_CAM_PRESET_CUSTOM
+
+        config MBDET_CAM_PIN_Y4
+            int "Y4 GPIO"
+            default 8
+            depends on MBDET_CAM_PRESET_CUSTOM
+
+        config MBDET_CAM_PIN_Y3
+            int "Y3 GPIO"
+            default 9
+            depends on MBDET_CAM_PRESET_CUSTOM
+
+        config MBDET_CAM_PIN_Y2
+            int "Y2 GPIO"
+            default 11
+            depends on MBDET_CAM_PRESET_CUSTOM
+
+        config MBDET_CAM_PIN_VSYNC
+            int "VSYNC GPIO"
+            default 6
+            depends on MBDET_CAM_PRESET_CUSTOM
+
+        config MBDET_CAM_PIN_HREF
+            int "HREF GPIO"
+            default 7
+            depends on MBDET_CAM_PRESET_CUSTOM
+
+        config MBDET_CAM_PIN_PCLK
+            int "PCLK GPIO"
+            default 13
+            depends on MBDET_CAM_PRESET_CUSTOM
+
+    endmenu
+
+endmenu

@@ -1,0 +1,54 @@
+# ESP-IDF Build System
+build/
+sdkconfig
+sdkconfig.old
+*.pyc
+__pycache__/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# User-specific configuration
+sdkconfig.old
+
+# Captured images (may contain personal/sensitive content)
+captured_images/
+captured_images_old/
+
+# Results and temporary files
+results/
+*.log
+
+# Private keys and certificates
+*.key
+*.pem
+!main/certs/root_cert_auth.pem 
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python
+*.pyc
+__pycache__/
+*.egg-info/
+dist/
+build/
+
+# Cache folders
+cache/
+.cache/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+*.cache
+
+# Model files
+*.tflite
+
+# MD files
+*.md

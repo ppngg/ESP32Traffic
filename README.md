@@ -730,7 +730,7 @@ Contributions are welcome! Please follow these guidelines:
 **Last Updated**: January/2026
 
 For questions or issues, please open an issue on the project repository or mail directly us 
-10422113@student.vgu.edu.vn
+10422113@student.vgu.edu.vn or 10422105@student.vgu.edu.vn
 ### Compsentation
 Thanks Dr Vo Bich Hien a lecturer at Vietnamese German University for guiding us during this projects
 

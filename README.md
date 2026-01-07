@@ -227,7 +227,7 @@ pip install tensorflow
 
 Before building, ensure you have:
 
-1. **TensorFlow Lite Model**: `epoch_100_int8.tflite`
+1. **TensorFlow Lite Model**: [`epoch_100_int8.tflite`](https://drive.google.com/file/d/1zyIHK2BcL_hNi34KyIryjksd4vGLv1GC/view?usp=drive_link)
    - Place in project root directory
    - INT8 quantized format required
    - Model should output YOLO-style detections

@@ -2,6 +2,7 @@
 
 An intelligent traffic light management system that uses AI-powered computer vision to detect traffic density and dynamically adjust signal timing. The system integrates ESP32-based edge computing with AWS IoT for cloud connectivity and real-time traffic monitoring.
 
+The full report for our project can be viewed [here](ProjectReport.pdf)
 ## Table of Contents
 
 - [Overview](#overview)
